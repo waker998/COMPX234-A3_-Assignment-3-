@@ -38,3 +38,10 @@ def send_file_requests(host, port, filename):
                 sock.send(message.encode())
                 response = sock.recv(1024).decode()
                 print(f"{line}: {response[4:]}")
+
+# 主程序入口
+if __name__ == "__main__":
+    if len(sys.argv) != 4:
+        print("Usage: python tuple_client_v4.py <host> <port> <file>")
+        exit(1)
+    send_file_requests(sys.argv[1], int(sys.argv[2]), sys.argv[3])
