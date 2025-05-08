@@ -58,3 +58,9 @@ class TupleSpaceServer:
                 val = self.tuple_space.pop(key)
                 return f"OK ({key}, {val}) removed"
             return f"ERR {key} does not exist"
+
+    def read(self, key):
+        with self.lock:
+            if key in self.tuple_space:
+                return f"OK ({key}, {self.tuple_space[key]}) read"
+            return f"ERR {key} does not exist"
