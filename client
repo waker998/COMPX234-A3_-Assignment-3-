@@ -1,0 +1,14 @@
+import socket
+import sys
+
+# 格式化请求消息，符合服务器协议格式
+def format_message(command, key, value=""):
+    if command not in ["PUT", "GET", "READ"]:
+        return None
+    cmd_map = {"PUT": "P", "GET": "G", "READ": "R"}
+    cmd = cmd_map[command]
+    payload = f"{cmd} {key}" + (f" {value}" if value else "")
+    if len(f"{key} {value}".strip()) > 970:
+        return "TOO_LONG"
+    full = f"{str(len(payload) + 4).zfill(3)} {payload}"
+    return full
