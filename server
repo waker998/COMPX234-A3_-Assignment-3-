@@ -44,3 +44,10 @@ class TupleSpaceServer:
             return self.read(content)
         else:
             return "ERR unknown command"
+
+    def put(self, key, value):
+        with self.lock:
+            if key in self.tuple_space:
+                return f"ERR {key} already exists"
+            self.tuple_space[key] = value
+            return f"OK ({key}, {value}) added"
