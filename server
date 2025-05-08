@@ -27,3 +27,7 @@ class TupleSpaceServer:
         finally:
             conn.close()
             print(f"[-] Disconnected: {addr}")
+
+    def send(self, conn, message):
+        length = len(message) + 4
+        conn.send(f"{str(length).zfill(3)} {message}".encode())
