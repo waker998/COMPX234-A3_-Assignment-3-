@@ -6,3 +6,24 @@ class TupleSpaceServer:
     def __init__(self):
         self.tuple_space = {}         # 存储键值对
         self.lock = threading.Lock()  # 用于线程安全访问
+
+    def handle(self, conn, addr):
+        print(f"[+] Client connected: {addr}")
+        try:
+            while True:
+                data = conn.recv(1024).decode()
+                if not data:
+                    break
+                parts = data.strip().split(' ', 2)
+                if len(parts) < 2:
+                    self.send(conn, "ERR invalid format")
+                    continue
+                cmd = parts[1]
+                content = parts[2] if len(parts) > 2 else ""
+                response = self.process_command(cmd, content)
+                self.send(conn, response)
+        except Exception as e:
+            print(f"[!] Error with {addr}: {e}")
+        finally:
+            conn.close()
+            print(f"[-] Disconnected: {addr}")
