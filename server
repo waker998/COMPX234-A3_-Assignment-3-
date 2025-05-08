@@ -75,3 +75,11 @@ def start_server(port):
         while True:
             conn, addr = s.accept()
             threading.Thread(target=server.handle, args=(conn, addr)).start()
+
+# 主程序入口
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) != 2:
+        print("Usage: python tuple_server_v4.py <port>")
+        exit(1)
+    start_server(int(sys.argv[1]))
