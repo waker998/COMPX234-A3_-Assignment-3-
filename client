@@ -12,3 +12,29 @@ def format_message(command, key, value=""):
         return "TOO_LONG"
     full = f"{str(len(payload) + 4).zfill(3)} {payload}"
     return full
+
+# 从文件中读取命令并发送给服务器
+def send_file_requests(host, port, filename):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.connect((host, port))
+        with open(filename, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                parts = line.split(' ', 2)
+                if len(parts) < 2:
+                    print(f"{line}: ERR invalid request")
+                    continue
+                command, key = parts[0], parts[1]
+                value = parts[2] if len(parts) == 3 else ""
+                message = format_message(command, key, value)
+                if message == "TOO_LONG":
+                    print(f"{line}: ERR exceeds 970 characters")
+                    continue
+                elif message is None:
+                    print(f"{line}: ERR unknown command")
+                    continue
+                sock.send(message.encode())
+                response = sock.recv(1024).decode()
+                print(f"{line}: {response[4:]}")
