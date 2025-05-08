@@ -1,0 +1,8 @@
+import socket
+import threading
+
+# 定义一个类封装元组空间服务器的功能
+class TupleSpaceServer:
+    def __init__(self):
+        self.tuple_space = {}         # 存储键值对
+        self.lock = threading.Lock()  # 用于线程安全访问
