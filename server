@@ -51,3 +51,10 @@ class TupleSpaceServer:
                 return f"ERR {key} already exists"
             self.tuple_space[key] = value
             return f"OK ({key}, {value}) added"
+
+    def get(self, key):
+        with self.lock:
+            if key in self.tuple_space:
+                val = self.tuple_space.pop(key)
+                return f"OK ({key}, {val}) removed"
+            return f"ERR {key} does not exist"
