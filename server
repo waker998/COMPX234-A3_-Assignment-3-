@@ -31,3 +31,16 @@ class TupleSpaceServer:
     def send(self, conn, message):
         length = len(message) + 4
         conn.send(f"{str(length).zfill(3)} {message}".encode())
+
+    def process_command(self, cmd, content):
+        if cmd == 'P':
+            if ' ' not in content:
+                return "ERR invalid PUT format"
+            key, value = content.split(' ', 1)
+            return self.put(key, value)
+        elif cmd == 'G':
+            return self.get(content)
+        elif cmd == 'R':
+            return self.read(content)
+        else:
+            return "ERR unknown command"
